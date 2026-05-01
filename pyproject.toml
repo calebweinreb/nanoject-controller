@@ -1,0 +1,18 @@
+[project]
+name = "nanoject-controller"
+version = "0.1.0"
+description = "GUI for controlling TTL pulse output on Arduino/Teensy microcontrollers."
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Caleb Weinreb" }]
+dependencies = ["pyserial>=3.5"]
+
+[project.scripts]
+nanoject-controller = "nanoject_controller.gui:main"
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

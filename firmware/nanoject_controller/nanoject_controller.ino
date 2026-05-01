@@ -18,10 +18,13 @@
 //     ERR <msg>                          parse / param error
 
 // ====== Adjust these in source ======
-const int  OUTPUT_PIN     = 8;     // TTL output pin
-const int  PULSE_WIDTH_MS = 10;    // pulse duration (ms)
+const int  OUTPUT_PIN     = 18;     // primary TTL output pin
+const int  AUX_PINS[]     = {3, 7}; // additional pins held HIGH during each pulse
+const int  PULSE_WIDTH_MS = 100;    // pulse duration (ms)
 const long BAUD           = 115200;
 // ====================================
+
+const int N_AUX_PINS = sizeof(AUX_PINS) / sizeof(AUX_PINS[0]);
 
 bool          running         = false;
 unsigned long next_pulse_ms   = 0;
@@ -31,8 +34,10 @@ unsigned long interval_ms     = 0;
 
 void emitPulse() {
   digitalWrite(OUTPUT_PIN, HIGH);
+  for (int i = 0; i < N_AUX_PINS; i++) digitalWrite(AUX_PINS[i], HIGH);
   delay(PULSE_WIDTH_MS);
   digitalWrite(OUTPUT_PIN, LOW);
+  for (int i = 0; i < N_AUX_PINS; i++) digitalWrite(AUX_PINS[i], LOW);
 }
 
 void handleCommand(String cmd) {
@@ -83,6 +88,10 @@ void handleCommand(String cmd) {
 void setup() {
   pinMode(OUTPUT_PIN, OUTPUT);
   digitalWrite(OUTPUT_PIN, LOW);
+  for (int i = 0; i < N_AUX_PINS; i++) {
+    pinMode(AUX_PINS[i], OUTPUT);
+    digitalWrite(AUX_PINS[i], LOW);
+  }
   Serial.begin(BAUD);
   // Some boards need a moment for the USB serial to come up.
   unsigned long t0 = millis();
